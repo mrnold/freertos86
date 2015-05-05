@@ -10,7 +10,7 @@
 
 ifeq ($(CALC), 86)
 	EXT=86p
-	CODELOC=0x8100
+	CODELOC=0x8200
 	INCLUDE += -Iti86
 	PORTDIR=ti86
 endif
@@ -34,6 +34,7 @@ FREERTOSREL += $(BUILD)/kernel/freertos/queue.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/list.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/port.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/heap_1.rel
+FREERTOSREL += $(BUILD)/kernel/syscall.rel
 $(BUILD)/kernel/kernel.ihx: $(FREERTOSREL)
 	$(CC) -mz80 --no-std-crt0 --reserve-regs-iy --opt-code-speed --out-fmt-ihx --code-loc $(CODELOC) --data-loc 0 -o $@ $^
 
@@ -47,6 +48,8 @@ $(BUILD)/kernel/$(PORTDIR)/port.rel: $(PORTDIR)/port.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 $(BUILD)/kernel/$(PORTDIR)/heap_1.rel: $(PORTDIR)/heap_1.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
+$(BUILD)/kernel/syscall.rel: ../shared/syscall_internal.asm
+	$(AS) -I../shared -l -s -o $@ $^
 
 clean:
 	python -c "import shutil; shutil.rmtree('$(BUILD)/kernel', True)"
