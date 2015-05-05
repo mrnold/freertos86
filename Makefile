@@ -15,11 +15,14 @@ LDFLAGS := -m -w -x -i -b _DATA=0x0000
 
 INCLUDE := \
 	-I$(CURDIR)/kernel/freertos/include \
-	-I$(CURDIR)/kernel/$(CALC)
+	-I$(CURDIR)/kernel/ti$(CALC)
 export
 
-.PHONY: kernel launcher clean
-all: kernel launcher
+.PHONY: kernel launcher apps clean
+all: kernel launcher apps
+
+apps:
+	make -C apps
 
 kernel:
 	make -C kernel
@@ -30,3 +33,4 @@ launcher:
 clean:
 	make -C kernel clean
 	make -C launcher clean
+	make -C apps clean
