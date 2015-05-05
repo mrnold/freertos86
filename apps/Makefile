@@ -10,7 +10,7 @@
 
 ifeq ($(CALC), 86)
 	EXT=86p
-	CODELOC=0xD748
+	CODELOC=0xA000
 	LDFLAGS += -b _CODE=$(CODELOC)
 endif
 
@@ -25,11 +25,18 @@ $(BUILD)/apps/demo/demo.bin: $(BUILD)/apps/demo/demo.ihx
 	python ../tools/ihxtobin.py $^
 	python ../tools/trim.py $(BUILD)/apps/demo/demo.map $@ $(CODELOC)
 
-$(BUILD)/apps/demo/demo.ihx: $(BUILD)/apps/demo/demo.rel
+DEMORELS += $(BUILD)/apps/syscall_external.rel
+DEMORELS += $(BUILD)/apps/demo/demo.rel
+$(BUILD)/apps/demo/demo.ihx: $(DEMORELS)
 	$(LD) $(LDFLAGS) $@ $^
 
-$(BUILD)/apps/demo/demo.rel: demo/demo.c
+$(BUILD)/apps/demo/demo.rel:  demo/demo.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
+
+SYSCALLSRC += ../shared/syscall_external.asm
+SYSCALLSRC += ../shared/syscall.inc
+$(BUILD)/apps/syscall_external.rel: $(SYSCALLSRC)
+	$(AS) -I../shared -l -s -o $@ $<
 
 clean:
 	python -c "import shutil; shutil.rmtree('$(BUILD)/apps', True)"
