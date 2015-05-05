@@ -9,7 +9,7 @@ CFLAGS := -mz80       \
 	--no-std-crt0     \
 	--reserve-regs-iy \
 	--opt-code-speed  \
-	--max-allocs-per-node 3000
+	--max-allocs-per-node 30000
 
 LDFLAGS := -m -w -x -i -b _DATA=0x0000
 

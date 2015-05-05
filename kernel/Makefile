@@ -10,7 +10,7 @@
 
 ifeq ($(CALC), 86)
 	EXT=86p
-	CODELOC=0x8200
+	CODELOC=0x8180
 	INCLUDE += -Iti86
 	PORTDIR=ti86
 endif
