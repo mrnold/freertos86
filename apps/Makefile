@@ -12,6 +12,7 @@ ifeq ($(CALC), 86)
 	EXT=86p
 	CODELOC=0xA000
 	LDFLAGS += -b _CODE=$(CODELOC)
+	PORTDIR=ti86
 endif
 
 DEMOBLD := '$(BUILD)/apps/demo'
@@ -33,8 +34,8 @@ $(BUILD)/apps/demo/demo.ihx: $(DEMORELS)
 $(BUILD)/apps/demo/demo.rel:  demo/demo.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 
-SYSCALLSRC += ../shared/syscall_external.asm
-SYSCALLSRC += ../shared/syscall.inc
+SYSCALLSRC += ../kernel/$(PORTDIR)/syscall_external.asm
+SYSCALLSRC += ../kernel/$(PORTDIR)/syscall.inc
 $(BUILD)/apps/syscall_external.rel: $(SYSCALLSRC)
 	$(AS) -I../shared -l -s -o $@ $<
 
