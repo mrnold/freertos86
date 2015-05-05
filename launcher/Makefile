@@ -18,7 +18,7 @@ LNCHBLD := '$(BUILD)/launcher'
 MKLNCHBLDDIR := $(shell python -c \
 	"import os; 0 if os.path.exists($(LNCHBLD)) else os.makedirs($(LNCHBLD))")
 
-launcher.86p: $(BUILD)/launcher/launcher.bin
+launcher.$(EXT): $(BUILD)/launcher/launcher.bin
 	python ../tools/binto86p.py ti86 $^ $@
 
 $(BUILD)/launcher/launcher.bin: $(BUILD)/launcher/launcher.ihx
