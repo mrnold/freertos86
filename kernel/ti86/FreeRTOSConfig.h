@@ -5,7 +5,7 @@
 #define configTICK_RATE_HZ                                     200
 #define configMAX_PRIORITIES                                   4
 #define configMINIMAL_STACK_SIZE                               128 // TODO: measure
-#define configTOTAL_HEAP_SIZE                                  2304
+#define configTOTAL_HEAP_SIZE                                  2296
 #define configMAX_TASK_NAME_LEN                                16
 #define configUSE_16_BIT_TICKS                                 1
 #define configIDLE_SHOULD_YIELD                                1
