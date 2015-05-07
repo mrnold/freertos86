@@ -22,12 +22,12 @@ RTOSBLD := '$(BUILD)/kernel/freertos'
 MKRTOSBLDDIR := $(shell python -c \
 	"import os; 0 if os.path.exists($(RTOSBLD)) else os.makedirs($(RTOSBLD))")
 
-freertos.$(EXT): $(BUILD)/kernel/kernel.bin
+freertos.$(EXT): $(BUILD)/kernel/freertos.bin
 	python ../tools/binto86p.py ti$(CALC) $^ $@
 
-$(BUILD)/kernel/kernel.bin: $(BUILD)/kernel/kernel.ihx
+$(BUILD)/kernel/freertos.bin: $(BUILD)/kernel/freertos.ihx
 	python ../tools/ihxtobin.py $^
-	python ../tools/trim.py $(BUILD)/kernel/kernel.map $@ $(CODELOC)
+	python ../tools/trim.py $(BUILD)/kernel/freertos.map $@ $(CODELOC)
 
 FREERTOSREL += $(BUILD)/kernel/freertos/tasks.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/queue.rel
@@ -35,7 +35,7 @@ FREERTOSREL += $(BUILD)/kernel/freertos/list.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/port.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/heap_1.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/syscall.rel
-$(BUILD)/kernel/kernel.ihx: $(FREERTOSREL)
+$(BUILD)/kernel/freertos.ihx: $(FREERTOSREL)
 	$(CC) -mz80 --no-std-crt0 --reserve-regs-iy --opt-code-speed --out-fmt-ihx --code-loc $(CODELOC) --data-loc 0 -o $@ $^
 
 $(BUILD)/kernel/freertos/tasks.rel: freertos/tasks.c
