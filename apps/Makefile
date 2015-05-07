@@ -19,16 +19,16 @@ DEMOBLD := '$(BUILD)/apps/demo'
 MKDEMOBLDDIR := $(shell python -c \
 	"import os; 0 if os.path.exists($(DEMOBLD)) else os.makedirs($(DEMOBLD))")
 
-demo.$(EXT): $(BUILD)/apps/demo/demo.bin
+demoprog.$(EXT): $(BUILD)/apps/demo/demoprog.bin
 	python ../tools/binto86p.py ti86 $^ $@
 
-$(BUILD)/apps/demo/demo.bin: $(BUILD)/apps/demo/demo.ihx
+$(BUILD)/apps/demo/demoprog.bin: $(BUILD)/apps/demo/demoprog.ihx
 	python ../tools/ihxtobin.py $^
-	python ../tools/trim.py $(BUILD)/apps/demo/demo.map $@ $(CODELOC)
+	python ../tools/trim.py $(BUILD)/apps/demo/demoprog.map $@ $(CODELOC)
 
 DEMORELS += $(BUILD)/apps/syscall_external.rel
 DEMORELS += $(BUILD)/apps/demo/demo.rel
-$(BUILD)/apps/demo/demo.ihx: $(DEMORELS)
+$(BUILD)/apps/demo/demoprog.ihx: $(DEMORELS)
 	$(LD) $(LDFLAGS) $@ $^
 
 $(BUILD)/apps/demo/demo.rel:  demo/demo.c
@@ -37,7 +37,7 @@ $(BUILD)/apps/demo/demo.rel:  demo/demo.c
 SYSCALLSRC += ../kernel/$(PORTDIR)/syscall_external.asm
 SYSCALLSRC += ../kernel/$(PORTDIR)/syscall.inc
 $(BUILD)/apps/syscall_external.rel: $(SYSCALLSRC)
-	$(AS) -I../shared -l -s -o $@ $<
+	$(AS) -I../kernel/$(PORTDIR) -l -s -o $@ $<
 
 clean:
 	python -c "import shutil; shutil.rmtree('$(BUILD)/apps', True)"

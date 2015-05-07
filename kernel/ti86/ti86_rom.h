@@ -1,0 +1,13 @@
+#define DIVHLBY10           0x4044
+#define EX_AHL_BDE          0x45f3
+#define SET_ABS_SRC_ADDR    0x4647
+#define SET_MM_NUM_BYTES    0x464f
+#define VPUTMAP             0x4aa1
+#define VPUTS               0x4aa5
+#define AHL_PLUS_TWO        0x4c3f
+#define MM_LDIR_SET_SIZE    0x524d
+#define SET_ABS_DEST_ADDR   0x5285
+#define MM_LDIR             0x52ed
+#define TEXTCOL_ADDRESS     0xc37c
+#define TEXTROW_ADDRESS     0xc37d
+#define ASAPVAR             0xd6fc
