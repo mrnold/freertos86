@@ -19,7 +19,7 @@ void main(void) __naked
         call #AHL_PLUS_TWO
         call #SET_ABS_SRC_ADDR
         ld a, #0x01
-        ld hl, #0x0000
+        ld hl, #0x0100
         call #SET_ABS_DEST_ADDR
         xor a
         ld hl, #0x1f00
@@ -40,6 +40,7 @@ void main(void) __naked
         ld hl, #0x1f00
         call #SET_MM_NUM_BYTES
         call #MM_LDIR
+        call 0x810b ; Initialize FreeRTOS and port
         jp 0xA002
     kernel:
         .db 0, 8
