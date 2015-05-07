@@ -29,6 +29,7 @@ $(BUILD)/kernel/freertos.bin: $(BUILD)/kernel/freertos.ihx
 	python ../tools/ihxtobin.py $^
 	python ../tools/trim.py $(BUILD)/kernel/freertos.map $@ $(CODELOC)
 
+FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/startup.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/tasks.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/queue.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/list.rel
@@ -50,6 +51,8 @@ $(BUILD)/kernel/$(PORTDIR)/heap_1.rel: $(PORTDIR)/heap_1.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 $(BUILD)/kernel/$(PORTDIR)/syscall.rel: $(PORTDIR)/syscall_internal.asm
 	$(AS) $(INCLUDE) -l -s -o $@ $^
+$(BUILD)/kernel/$(PORTDIR)/startup.rel: $(PORTDIR)/startup.asm
+	$(AS) $(INCLUDE) -g -l -s -o $@ $^
 
 clean:
 	python -c "import shutil; shutil.rmtree('$(BUILD)/kernel', True)"
