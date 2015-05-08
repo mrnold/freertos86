@@ -27,7 +27,7 @@ freertos.$(EXT): $(BUILD)/kernel/freertos.bin
 
 $(BUILD)/kernel/freertos.bin: $(BUILD)/kernel/freertos.ihx
 	python ../tools/ihxtobin.py $^
-#python ../tools/trim.py $(BUILD)/kernel/freertos.map $@ $(CODELOC)
+	python ../tools/trim.py $(BUILD)/kernel/freertos.map $@ 0x8100
 
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/startup.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/tasks.rel
