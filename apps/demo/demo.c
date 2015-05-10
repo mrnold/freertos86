@@ -23,22 +23,34 @@ void putchar(char c)
     __endasm;
 }
 
+__sfr __at 0x01 keyport;
+
 portTASK_FUNCTION(A, delay)
 {
     int ticks = (int)delay;
+    char a = 'A';
 
     while (1) {
-        putchar('A');
+        putchar(a);
         vTaskDelay(ticks);	
+        keyport = 0xfe;
+        if (keyport != 0xff) {
+            a++;
+        }
     }
 }
 
 portTASK_FUNCTION(B, delay)
 {
     int ticks = (int)delay;
+    char b = 'B';
 
     while (1) {
-        putchar('B');
+        putchar(b);
         vTaskDelay(ticks);	
+        keyport = 0xbf;
+        if (keyport != 0xff) {
+            b--;
+        }
     }
 }
