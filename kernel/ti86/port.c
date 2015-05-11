@@ -4,18 +4,26 @@
 // Fill in the stack of a new task.
 StackType_t *pxPortInitialiseStack(StackType_t *s, TaskFunction_t t, void *p)
 {
+    // Stack for the call to the task function
     *s-- = (StackType_t)p; // Parameters
-    *s-- = (StackType_t)0x0000; // Return address
+    *s-- = (StackType_t)vTaskEndScheduler; // Return address
     *s-- = (StackType_t)t; // Task code start address
-    *s-- = (StackType_t)0x11111111; // IX
-    *s-- = (StackType_t)0xAFAFAFAF; // AF
-    *s-- = (StackType_t)0xBCBCBCBC; // BC
-    *s-- = (StackType_t)0xDEDEDEDE; // DE
-    *s-- = (StackType_t)0xEFEFEFEF; // HL
-    *s-- = (StackType_t)0xFAFAFAFA; // AF'
-    *s-- = (StackType_t)0xCBCBCBCB; // BC'
-    *s-- = (StackType_t)0xEDEDEDED; // DE'
-    *s   = (StackType_t)0xFEFEFEFE; // HL'
+    // The 'ret' in the initial context restore will return to t.
+    // The function t will expect the stack to have the return address of the
+    // calling function, followed by parameters to the task function.
+    // The return address does not necessarily need to be set, since tasks
+    // aren't really supposed to return. This rule can be bent though.
+
+    // Values for registers after initial context switch
+    *s-- = (StackType_t)0x1111; // IX
+    *s-- = (StackType_t)0xAFAF; // AF
+    *s-- = (StackType_t)0xBCBC; // BC
+    *s-- = (StackType_t)0xDEDE; // DE
+    *s-- = (StackType_t)0xEFEF; // HL
+    *s-- = (StackType_t)0xFAFA; // AF'
+    *s-- = (StackType_t)0xCBCB; // BC'
+    *s-- = (StackType_t)0xEDED; // DE'
+    *s   = (StackType_t)0xFEFE; // HL'
     return s;
 }
 
