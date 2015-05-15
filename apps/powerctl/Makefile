@@ -1,4 +1,4 @@
-# Variables that need to be set in order to build this demo:
+# Variables that need to be set in order to build this application:
 #  CC: C compiler, sdcc
 #  AS: Assembler, sdasz80
 #  LD: Linker, sdldz80
@@ -15,23 +15,23 @@ ifeq ($(CALC), 86)
 	PORTDIR=ti86
 endif
 
-DEMOBLD := '$(BUILD)/apps/demo'
-MKDEMOBLDDIR := $(shell python -c \
-	"import os; 0 if os.path.exists($(DEMOBLD)) else os.makedirs($(DEMOBLD))")
+BLD := '$(BUILD)/apps/powerctl'
+BLDDIR := $(shell python -c \
+	"import os; 0 if os.path.exists($(BLD)) else os.makedirs($(BLD))")
 
-demoprog.$(EXT): $(BUILD)/apps/demo/demoprog.bin
+powerctl.$(EXT): $(BUILD)/apps/powerctl/powerctl.bin
 	python ../../tools/binto86p.py ti86 $^ $@
 
-$(BUILD)/apps/demo/demoprog.bin: $(BUILD)/apps/demo/demoprog.ihx
+$(BUILD)/apps/powerctl/powerctl.bin: $(BUILD)/apps/powerctl/powerctl.ihx
 	python ../../tools/ihxtobin.py $^
-	python ../../tools/trim.py $(BUILD)/apps/demo/demoprog.map $@ $(CODELOC)
+	python ../../tools/trim.py $(BUILD)/apps/powerctl/powerctl.map $@ $(CODELOC)
 
-DEMORELS += $(BUILD)/apps/syscall_external.rel
-DEMORELS += $(BUILD)/apps/demo/demo.rel
-$(BUILD)/apps/demo/demoprog.ihx: $(DEMORELS)
+RELS += $(BUILD)/apps/syscall_external.rel
+RELS += $(BUILD)/apps/powerctl/powerctl.rel
+$(BUILD)/apps/powerctl/powerctl.ihx: $(RELS)
 	$(LD) $(LDFLAGS) $@ $^
 
-$(BUILD)/apps/demo/demo.rel:  demo.c
+$(BUILD)/apps/powerctl/powerctl.rel: powerctl.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 
 SYSCALLSRC += ../../kernel/$(PORTDIR)/syscall_external.asm
@@ -40,4 +40,4 @@ $(BUILD)/apps/syscall_external.rel: $(SYSCALLSRC)
 	$(AS) -I../../kernel/$(PORTDIR) -l -s -o $@ $<
 
 clean:
-	python -c "import shutil; shutil.rmtree('$(BUILD)/apps/demo', True)"
+	python -c "import shutil; shutil.rmtree('$(BUILD)/apps/powerctl', True)"
