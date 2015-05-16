@@ -3,3 +3,6 @@ define_syscall vTaskStartScheduler 0x8102
 define_syscall vTaskDelay          0x8105
 define_syscall xTaskGenericCreate  0x8108
 define_syscall portInit            0x810b
+define_syscall setxy               0x810e
+define_syscall puts                0x8111
+define_syscall vPortYield          0x8114

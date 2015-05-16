@@ -82,6 +82,13 @@ void vPortYieldFromTick(void)
     portRESTORE_CONTEXT();
 }
 
+void vPortYield(void)
+{
+    portSAVE_CONTEXT();
+    vTaskSwitchContext();
+    portRESTORE_CONTEXT();
+}
+
 void timer_isr(void) __interrupt
 {
     vPortYieldFromTick();
@@ -124,5 +131,3 @@ void vPortEndScheduler(void) __naked
         jp .
     __endasm;
 }
-
-void vPortYield(void) { }
