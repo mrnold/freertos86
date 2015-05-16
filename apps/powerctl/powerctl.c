@@ -15,9 +15,14 @@ void main(void)
     vTaskStartScheduler();
 }
 
+__sfr __at 0x01 keyport;
 portTASK_FUNCTION(keys, params)
 {
     while (1) {
+        keyport = 0xfe;
+        if (keyport != 0xff) {
+            vPortEndScheduler();
+        }
         vPortYield();
     }
 }
