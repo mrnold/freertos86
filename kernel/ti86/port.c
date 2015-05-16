@@ -1,6 +1,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+StackType_t *exitStack = (StackType_t *)0xf8fb;
+
 // Fill in the stack of a new task.
 StackType_t *pxPortInitialiseStack(StackType_t *s, TaskFunction_t t, void *p)
 {
@@ -94,8 +96,11 @@ void timer_isr(void) __interrupt
     vPortYieldFromTick();
 }
 
-BaseType_t xPortStartScheduler(void)
+BaseType_t xPortStartScheduler(void) PRIVILEGED_FUNCTION
 {
+    // Save SP in exitStack to allow clean exit from FreeRTOS
+    __asm__("ld (_exitStack), sp");
+
     // Set up timer
     __asm
         di
@@ -124,10 +129,12 @@ BaseType_t xPortStartScheduler(void)
     return 0;
 }
 
-void vPortEndScheduler(void) __naked
+void vPortEndScheduler(void)
 {
-    // Spin in circles
     __asm
-        jp .
+        di
+        ld sp, (_exitStack)
+        im 1
+        ei
     __endasm;
 }
