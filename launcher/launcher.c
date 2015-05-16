@@ -47,6 +47,6 @@ void main(void) __naked
         .strz /freertos/
     demo:
         .db 0, 8
-        .strz /demoprog/
+        .strz /powerctl/
     __endasm;
 }

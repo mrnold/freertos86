@@ -34,6 +34,7 @@ FREERTOSREL += $(BUILD)/kernel/freertos/tasks.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/queue.rel
 FREERTOSREL += $(BUILD)/kernel/freertos/list.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/port.rel
+FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/ti86.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/heap_1.rel
 FREERTOSREL += $(BUILD)/kernel/$(PORTDIR)/syscall.rel
 $(BUILD)/kernel/freertos.ihx: $(FREERTOSREL)
@@ -47,10 +48,12 @@ $(BUILD)/kernel/freertos/list.rel: freertos/list.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 $(BUILD)/kernel/$(PORTDIR)/port.rel: $(PORTDIR)/port.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
+$(BUILD)/kernel/$(PORTDIR)/ti86.rel: $(PORTDIR)/ti86.c
+	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
 $(BUILD)/kernel/$(PORTDIR)/heap_1.rel: $(PORTDIR)/heap_1.c
 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $^
-$(BUILD)/kernel/$(PORTDIR)/syscall.rel: $(PORTDIR)/syscall_internal.asm
-	$(AS) $(INCLUDE) -l -s -o $@ $^
+$(BUILD)/kernel/$(PORTDIR)/syscall.rel: $(PORTDIR)/syscall_internal.asm $(PORTDIR)/syscall.inc
+	$(AS) $(INCLUDE) -l -s -o $@ $<
 $(BUILD)/kernel/$(PORTDIR)/startup.rel: $(PORTDIR)/startup.asm
 	$(AS) $(INCLUDE) -g -l -s -o $@ $^
 
