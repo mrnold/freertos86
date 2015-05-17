@@ -93,7 +93,20 @@ void vPortYield(void)
 
 void timer_isr(void) __interrupt
 {
-    vPortYieldFromTick();
+    // Send 0a, 0b when ON is pressed (and do not yield)
+    // Send 09, 0b when ON is not pressed
+    __asm
+        in a, (3)   ;// Bit 0 set if this is an ON interrupt
+        rra
+        call nc, _vPortYieldFromTick
+        in a, (3)
+        and #0x01
+        add a, #0x09
+        out (3), a
+        ld a, #0x0b
+        out (3), a
+        ei
+    __endasm;
 }
 
 BaseType_t xPortStartScheduler(void) PRIVILEGED_FUNCTION
