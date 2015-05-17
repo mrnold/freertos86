@@ -10,3 +10,4 @@ define_syscall vPortEndScheduler    0x8117
 define_syscall xQueueGenericCreate  0x811a
 define_syscall xQueueGenericReceive 0x811d
 define_syscall xQueueGenericSend    0x8120
+define_syscall printnum             0x8123

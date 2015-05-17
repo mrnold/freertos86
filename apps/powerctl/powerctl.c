@@ -7,10 +7,14 @@ portTASK_FUNCTION_PROTO(keys, params);
 portTASK_FUNCTION_PROTO(link, params);
 portTASK_FUNCTION_PROTO(menu, params);
 QueueHandle_t keyqueue;
+struct keymsg {
+    unsigned char mask;
+    unsigned char bits;
+};
 
 void main(void)
 {
-    keyqueue = xQueueCreate(10, 1);
+    keyqueue = xQueueCreate(10, sizeof(struct keymsg));
     xTaskCreate(keys, "keys", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(link, "link", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(menu, "menu", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
@@ -23,11 +27,18 @@ void main(void)
 __sfr __at 0x01 keyport;
 portTASK_FUNCTION(keys, params)
 {
-    unsigned char key;
+    struct keymsg key;
     while (1) {
-        keyport = 0xfe;
-        key = keyport;
-        if (key != 0xff) {
+        key.mask = 0xfe;
+        keyport = key.mask;
+        key.bits = keyport;
+        if (key.bits != 0xff) {
+            xQueueSend(keyqueue, &key, 0);
+        }
+        key.mask = 0xbf;
+        keyport = key.mask;
+        key.bits = keyport;
+        if (key.bits != 0xff) {
             xQueueSend(keyqueue, &key, 0);
         }
         vPortYield();
@@ -43,15 +54,35 @@ portTASK_FUNCTION(link, params)
 
 portTASK_FUNCTION(menu, params)
 {
-    unsigned char key;
+    struct keymsg key;
     setxy(0, 0);
     puts("Power Control");
     while (1) {
         xQueueReceive(keyqueue, &key, portMAX_DELAY);
-        if (key != 0xff) {
+        setxy(0, 16);
+        printnum(key.mask);
+        setxy(0, 24);
+        printnum(key.bits);
+        if (key.mask == 0xfe) {
             setxy(0, 8);
-            puts("Key pressed, quitting!");
-            vPortEndScheduler();
+            if ((key.bits & 0x08) == 0) {
+                puts("up ");
+            }
+            if ((key.bits & 0x04) == 0) {
+                puts("right ");
+            }
+            if ((key.bits & 0x02) == 0) {
+                puts("left ");
+            }
+            if ((key.bits & 0x01) == 0) {
+                puts("down ");
+            }
+        } else if (key.mask == 0xbf) {
+            if ((key.bits & 0x40) == 0) {
+                setxy(0, 8);
+                puts("Exit key pressed, quitting!");
+                vPortEndScheduler();
+            }
         }
     }
 }
