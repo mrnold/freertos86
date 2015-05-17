@@ -5,6 +5,7 @@
 #define VPUTMAP             0x4aa1
 #define VPUTS               0x4aa5
 #define AHL_PLUS_TWO        0x4c3f
+#define GET_WORD_AHL        0x521d
 #define MM_LDIR_SET_SIZE    0x524d
 #define SET_ABS_DEST_ADDR   0x5285
 #define MM_LDIR             0x52ed
