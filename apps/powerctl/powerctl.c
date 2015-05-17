@@ -14,6 +14,8 @@ struct keymsg {
 
 void main(void)
 {
+    setxy(32, 32);
+    puts("FreeRTOS startup");
     keyqueue = xQueueCreate(10, sizeof(struct keymsg));
     xTaskCreate(keys, "keys", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(link, "link", configMINIMAL_STACK_SIZE, NULL, 1, NULL);

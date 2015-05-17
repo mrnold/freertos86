@@ -15,7 +15,9 @@ void puts(const char *const string)
     __asm
         ld l, 4(ix)
         ld h, 5(ix)
+        di
         call #VPUTS
+        ei
     __endasm;
 }
 
@@ -27,7 +29,9 @@ static void printdigits(unsigned int number)
         ld h, 5(ix)
         ld b, #5
     printnumxygetdigits:
+        di
         call #DIVHLBY10 ;// _divHLby10, remainder in A
+        ei
         push af
         djnz printnumxygetdigits
         ld b, #5
@@ -40,7 +44,9 @@ static void printdigits(unsigned int number)
         pop af
     printnumxyprintdigitsskip:
         add #0x30    ;// Add ASCII numbers offset
+        di
         call #VPUTMAP
+        ei
         djnz printnumxyprintdigits
     __endasm;
 }
