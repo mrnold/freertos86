@@ -10,7 +10,7 @@
 
 ifeq ($(CALC), 86)
 	EXT=86p
-	CODELOC=0xA000
+	CODELOC=0xA500
 	LDFLAGS += -b _CODE=$(CODELOC)
 	PORTDIR=ti86
 endif
