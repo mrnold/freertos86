@@ -18,3 +18,39 @@ void puts(const char *const string)
         call #VPUTS
     __endasm;
 }
+
+static void printdigits(unsigned int number)
+{
+    number;
+    __asm
+        ld l, 4(ix)
+        ld h, 5(ix)
+        ld b, #5
+    printnumxygetdigits:
+        call #DIVHLBY10 ;// _divHLby10, remainder in A
+        push af
+        djnz printnumxygetdigits
+        ld b, #5
+    printnumxystripzero:
+        pop af
+        cp #0
+        jp nz, printnumxyprintdigitsskip
+        djnz printnumxystripzero
+    printnumxyprintdigits:
+        pop af
+    printnumxyprintdigitsskip:
+        add #0x30    ;// Add ASCII numbers offset
+        call #VPUTMAP
+        djnz printnumxyprintdigits
+    __endasm;
+}
+
+void printnum(unsigned int number)
+{
+    if (number == 0) {
+        puts("0");
+    } else {
+        printdigits(number);
+    }
+}
+
