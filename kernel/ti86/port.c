@@ -110,12 +110,13 @@ void timer_isr(void) __naked
         jr z, doyield
         pop hl
         pop af
+        ei
         reti
     doyield:
         pop hl
         pop af
         jp _vPortYieldFromTick
-        reti ;// Shoult not get here
+        reti ;// Should not get here
     __endasm;
 }
 
@@ -139,8 +140,7 @@ BaseType_t xPortStartScheduler(void) PRIVILEGED_FUNCTION
         ldir
         ld a, #0xF9
         ld i, a
-        im 2
-        ei
+        im 2 ;// Rely on context restore to enable interrupts again
         jp timer_setup_done
     jump_timer::
         jp _timer_isr
